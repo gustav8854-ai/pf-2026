@@ -308,6 +308,31 @@
     a{color:inherit;text-decoration:none}
     section{margin:16px 0}
   }
+
+/* ===== Mobile: estudar pelo celular (melhorias de toque e leitura) ===== */
+@media(max-width:600px){
+  body{font-size:16px}
+  main p,main li,.qt,.aula,.ei,.eq{font-size:15px;line-height:1.6}
+  .opt{padding:13px 14px;min-height:48px;align-items:center;margin:8px 0}
+  .opt input[type=radio],.opt input[type=checkbox]{width:22px;height:22px;flex:0 0 auto}
+  .opt .lt{font-weight:700}
+  .btn{min-height:48px;padding:12px 18px;font-size:15px}
+  .simbar{gap:8px;flex-wrap:wrap;align-items:stretch}
+  .simbar .btn,.simbar>button{flex:1 1 45%}
+  .simbar .score,.simbar .sc,.simbar .timer{flex:1 1 100%;text-align:center}
+  .fc{padding:18px;min-height:120px}
+  .srs{gap:10px}
+  .srs .btn{flex:1 1 45%;min-height:44px}
+  .hubc{padding:14px}
+  .toc a{padding:12px 10px;font-size:15px}
+  .mapa-ramos{grid-template-columns:1fr}
+  .weights .wrow{font-size:13px}
+  table th,table td{padding:8px 10px}
+  h1{font-size:26px;line-height:1.2}
+  .sec{font-size:20px}
+  .back{width:46px;height:46px}
+  input,select,textarea{font-size:16px}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js"></script>
 <script>
@@ -419,6 +444,7 @@ window.DMAE_logout=function(){var done=function(){try{localStorage.removeItem("d
     <a href="#flashcards">Flashcards</a>
     <a href="#vespera">Revisão de véspera</a>
     <a href="#discursiva">Redação / Discursiva</a>
+    <a href="#mapas">Mapas mentais</a>
     <div class="grp">4 · Consultar</div>
     <a href="#ficha">Ficha do edital</a>
     <a href="#portugues">O que estudar (verticalizado)</a>
@@ -1145,6 +1171,15 @@ window.DMAE_logout=function(){var done=function(){try{localStorage.removeItem("d
         <li>☑ Fiquei dentro do limite de linhas?</li>
         <li>☑ Reli caçando erros (concordância, crase, vírgula)?</li>
       </ul>
+    </div></section>
+
+    
+    <!-- ============ MAPAS MENTAIS ============ -->
+    <section id="mapas"><div class="card">
+      <p class="eyebrow">Revisar · visão geral que fixa</p>
+      <h2 class="sec">Mapas mentais — o essencial de cada tema numa olhada</h2>
+      <p>Cada mapa condensa um assunto que <b>mais cai</b> em ramos e palavras-chave. Use para <b>revisar rápido</b> (na véspera e na revisão espaçada): olhe o mapa, tente <b>reproduzir de memória</b> e só depois confira. Quer aprofundar? Volte às <a href="#dominio">aulas</a> e aos <a href="#treinos-sec">treinos</a>.</p>
+      <div id="mapas-box"></div>
     </div></section>
 
     <!-- ============ 10. FONTES ============ -->
@@ -1998,5 +2033,26 @@ window.DMAE_syncPull=async function(){
   });
 })();
 </script>
+<script>
+var MAPAS=[{"tema": "Direito Penal", "ramos": [{"t": "Crime", "i": ["Fato típico + ilícito + culpável", "Dolo × culpa (culpa só se lei prevê)"]}, {"t": "Excludentes (art. 23)", "i": ["Legítima defesa", "Estado de necessidade", "Estrito cumprimento do dever", "Exercício regular de direito"]}, {"t": "Tentativa", "i": ["Reduz 1/3 a 2/3"]}]}, {"tema": "Processo Penal", "ramos": [{"t": "Inquérito", "i": ["Administrativo, inquisitivo", "Dispensável", "Indiciamento = delegado"]}, {"t": "Prisões", "i": ["Flagrante (qualquer um)", "Preventiva (juiz, s/ ofício após 2019)", "Temporária (Lei 7.960/89)"]}, {"t": "Anticrime (13.964/19)", "i": ["Cadeia de custódia", "Juiz das garantias"]}]}, {"tema": "Legislação Especial", "ramos": [{"t": "Leis-chave", "i": ["Drogas 11.343 (usuário≠traficante)", "Armas 10.826 (posse≠porte)", "Lavagem 9.613", "Org. criminosa 12.850 (4+)"]}, {"t": "Hediondos (3 T)", "i": ["Tortura · Tráfico · Terrorismo"]}]}, {"tema": "Constitucional — a PF", "ramos": [{"t": "Art. 144, §1º", "i": ["Polícia judiciária da União (exclusiva)", "Tráfico/contrabando/descaminho", "Fronteiras"]}, {"t": "Direitos (art. 5º)", "i": ["Nenhum é absoluto", "Casa inviolável (exceções)"]}]}];
+</script>
+
+<script>
+/* ===== Mapas mentais (revisão visual) ===== */
+(function(){
+  var st=document.createElement("style");
+  st.textContent=".mapa{margin:20px 0;border:1px solid var(--line-2);border-radius:14px;padding:14px 16px}.mapa-no{display:inline-block;background:var(--brand,#0a7d64);color:#fff;font-weight:700;padding:8px 16px;border-radius:999px;margin-bottom:12px;font-size:15px}.mapa-ramos{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.ramo{border-left:5px solid #2a8f6a;background:var(--line-2);border-radius:10px;padding:10px 12px}.ramo h5{margin:0 0 6px;font-size:14px;font-weight:700}.ramo ul{margin:0;padding-left:18px}.ramo li{margin:4px 0;font-size:13px;line-height:1.4}";
+  document.head.appendChild(st);
+  var box=document.getElementById("mapas-box"); if(!box||typeof MAPAS==="undefined")return;
+  var cores=["#2a8f6a","#2f6fd0","#c07a1e","#8a4fd0","#0a9aa0","#c0504d"];
+  box.innerHTML=MAPAS.map(function(m){
+    var rs=m.ramos.map(function(r,i){var c=cores[i%cores.length];
+      return '<div class="ramo" style="border-left-color:'+c+'"><h5 style="color:'+c+'">'+r.t+'</h5><ul>'+r.i.map(function(x){return '<li>'+x+'</li>';}).join("")+'</ul></div>';
+    }).join("");
+    return '<div class="mapa"><div class="mapa-no">'+m.tema+'</div><div class="mapa-ramos">'+rs+'</div></div>';
+  }).join("");
+})();
+</script>
+
 </body>
 </html>
